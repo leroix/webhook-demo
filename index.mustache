@@ -1,0 +1,57 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Rafflecopter Webhook Demo</title>
+  <meta name="description" content="Accept webhooks from anywhere and send them to Rafflecopter.com">
+  <meta name="author" content="Rafflecopter">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+<div class="container">
+  <div class="col-md-4"></div>
+  <div class="col-md-4">
+    <p class="bg-info">
+      Use the mustache templating below to indicate what fields from the incoming data should be sent to Rafflecopter. When you're done, provide <strong>{{ webhookUrl }}</strong> to the service you'd like to receive webhooks from.
+    </p>
+    <form action="" method="post">
+      <div class="form-group">
+        <label for="entrant-id">Entrant ID</label>
+        <input type="text" class="form-control" id="entrant-id" name="entrant-id" value="{{ entrant-id }}">
+        <p class="help-block">A Facebook ID would look like 147733601955627.</p>
+      </div>
+      <div class="form-group">
+        <label for="entrant-name">Entrant name</label>
+        <input type="text" class="form-control" id="entrant-name" name="entrant-name" value="{{ entrant-name }}">
+      </div>
+      <div class="form-group">
+        <label for="entrant-display">Entrant display</label>
+        <input type="text" class="form-control" id="entrant-display" name="entrant-display" value="{{ entrant-display }}">
+        <p class="help-block">A displayable identity for Twitter would be @rafflecopter.</p>
+      </div>
+      <div class="form-group">
+        <label for="entry">Entry body</label>
+        <input type="text" class="form-control" id="entry" name="entry" value="{{ entry }}">
+        <p class="help-block">A link to a Tweet to confirm that the entrant tweeted.</p>
+      </div>
+      <button type="submit" class="btn btn-default">Save</button>
+    </form>
+    {{#saved}}
+    <p class="bg-success">
+      Saved!
+    </p>
+    {{/saved}}
+  </div>
+  <div class="col-md-4"></div>
+</div>
+</body>
+</html>
