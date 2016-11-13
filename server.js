@@ -12,7 +12,11 @@ var redis = require('redis')
 
 // config
 var HTML_TEMPLATE = fs.readFileSync('./index.mustache').toString()
-  , redisClient = redis.createClient(process.env.REDIS_URL)
+  , redis_retry_strategy = function () { return 3000 } // retry connect after 3 seconds
+  , redisClient = redis.createClient({
+      url: process.env.REDIS_URL
+    , retry_strategy: redis_retry_strategy
+    })
   , REDIS_KEY = 'webhookTemplate'
   , PORT = process.env.PORT || 5000
   , BASE_URL = process.env.HEROKU_APP_NAME
