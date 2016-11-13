@@ -24,6 +24,9 @@ var HTML_TEMPLATE = fs.readFileSync('./index.mustache').toString()
     : 'http://localhost:' + PORT
 
 redisClient.on('error', console.error)
+redisClient.on('connect', function () {
+  console.log('Redis connected successfully.')
+})
 
 var app = express()
 
