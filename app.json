@@ -9,9 +9,6 @@
   "repository": "https://github.com/Rafflecopter/webhook-demo",
   "logo": "https://www.rafflecopter.com/static/img/newhome/top-logo.png",
   "success_url": "/",
-  "scripts": {
-    "postdeploy": "node server.js"
-  },
   "env": {
     "HEROKU_APP_NAME": {
       "required": true
