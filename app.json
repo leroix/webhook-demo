@@ -1,0 +1,32 @@
+{
+  "name": "Rafflecopter webhook demo",
+  "description": "Accept webhooks from anywhere and send them to Rafflecopter",
+  "keywords": [
+    "webhook",
+    "Rafflecopter"
+  ],
+  "website": "https://www.rafflecopter.com",
+  "repository": "https://github.com/Rafflecopter/webhook-demo",
+  "logo": "https://www.rafflecopter.com/static/img/newhome/top-logo.png",
+  "success_url": "/",
+  "scripts": {
+    "postdeploy": "node server.js"
+  },
+  "env": {
+    "HEROKU_APP_NAME": {
+      "required": true
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "image": "heroku/nodejs",
+  "addons": [
+    {
+      "plan": "heroku-redis:hobby-dev"
+    }
+  ]
+}
