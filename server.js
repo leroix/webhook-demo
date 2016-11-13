@@ -23,6 +23,7 @@ var HTML_TEMPLATE = fs.readFileSync('./index.mustache').toString()
     ? 'https://' + process.env.HEROKU_APP_NAME + '.herokuapp.com'
     : 'http://localhost:' + PORT
 
+redisClient.on('error', console.error)
 
 var app = express()
 
