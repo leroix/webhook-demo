@@ -8,3 +8,5 @@
 4. Let the app deploy and then click the button to visit your app.
 
 Note: you may need to enter a credit card to verify your account, but this app should be free to run.
+
+Also note: it may take a minute or two for the app to become available because Heroku takes a while to provision redis, but it should automatically connect once redis is available.
