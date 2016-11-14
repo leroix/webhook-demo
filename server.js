@@ -2,8 +2,7 @@
 var fs = require('fs')
 
 // vendor
-var redis = require('redis')
-  , express = require('express')
+var express = require('express')
   , morgan = require('morgan')
   , bodyParser = require('body-parser')
   , Mustache = require('mustache')
@@ -12,21 +11,14 @@ var redis = require('redis')
 
 // config
 var HTML_TEMPLATE = fs.readFileSync('./index.mustache').toString()
-  , redis_retry_strategy = function () { return 3000 } // retry connect after 3 seconds
-  , redisClient = redis.createClient({
-      url: process.env.REDIS_URL
-    , retry_strategy: redis_retry_strategy
-    })
-  , REDIS_KEY = 'webhookTemplate'
+  , WEBHOOK_TEMPLATE = fs.readFileSync('./EDIT-ME.webhook-format.mustache').toString()
   , PORT = process.env.PORT || 5000
-  , BASE_URL = process.env.HEROKU_APP_NAME
-    ? 'https://' + process.env.HEROKU_APP_NAME + '.herokuapp.com'
-    : 'http://localhost:' + PORT
+  , BASE_URL = process.env.BASE_URL
+    ? process.env.BASE_URL
+    : process.env.HEROKU_APP_NAME
+      ? 'https://' + process.env.HEROKU_APP_NAME + '.herokuapp.com'
+      : 'http://localhost:' + PORT
 
-redisClient.on('error', console.error)
-redisClient.on('connect', function () {
-  console.log('Redis connected successfully.')
-})
 
 var app = express()
 
@@ -37,53 +29,45 @@ app.use(morgan('combined'))
 // api endpoints
 //
 app.get('/', function (request, response) {
-  redisClient.get(REDIS_KEY, function (err, result) {
-    if (err) { return response.status(503).send() }
-
-    var form_data = JSON.parse(result)
-      , defaults = {
-          'entrant-id': '{{ user.id }}'
-        , 'entrant-name': '{{ user.first_name }} {{ user.last_name }}'
-        , 'entrant-display': '{{ user.username }}'
-        , 'entry': '{{ body }}'
-        , webhookUrl: BASE_URL + '/webhook'
-        }
-
-    if (request.query.saved) {
-      form_data.saved = true
-    }
-
-    response.send(Mustache.render(HTML_TEMPLATE, xtend(defaults, form_data)))
+  var html = Mustache.render(HTML_TEMPLATE, {
+    webhookUrl: BASE_URL + '/webhook'
+  , webhookTemplate: WEBHOOK_TEMPLATE
   })
-})
 
-app.post('/', bodyParser.urlencoded({extended: false}), function (request, response) {
-  redisClient.set(REDIS_KEY, JSON.stringify(request.body), function (err) {
-    if (err) { return response.status(503).send('unable to contact upstream server') }
-    
-    response.redirect(303, '/?saved=true')
-  })
+  response.send(html)
 })
 
 app.post('/webhook', bodyParser.json(), function (request, response) {
-  redisClient.get('webhookTemplate', function (err, template) {
-    if (err) { return response.status(503).send('unable to contact upstream server') }
+  var submission = JSON.parse(Mustache.render(WEBHOOK_TEMPLATE, request.body))
 
-    var submission = JSON.parse(Mustache.render(template, request.body))
+  coerceTimeField(submission)
 
-    send_request({
-      method: 'POST'
-    , url: 'http://requestb.in/1j8chuf1'
-    , json: submission
-    }, function (_err, resp, body) {
-      response.status(resp.statusCode).json(body)
-    })
+  send_request({
+    method: 'POST'
+  , url: 'http://requestb.in/1ignopr1'
+  , json: submission
+  }, function (_err, resp, body) {
+    response.status(resp.statusCode).json(body)
   })
 })
 
 
 app.listen(PORT, function() {
   console.log('Node app is running');
-  console.log('Access the data mapper at', BASE_URL)
+  console.log('Instructions available at', BASE_URL)
   console.log('Send webhook requests to', BASE_URL + '/webhook')
 });
+
+
+// util
+function coerceTimeField(submission) {
+  var datetime
+
+  // if time field is a string, assume it's iso8601
+  if (typeof submission.time === 'string') {
+    datetime = new Date(submission.time)
+    submission.time = +datetime
+  }
+
+  // otherwise, assume it's a millisecond unix timestamp and do nothing
+}

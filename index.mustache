@@ -17,37 +17,13 @@
 </head>
 
 <body>
-<div class="container">
+<div style="width: 600px" class="container">
   <p class="bg-info">
-    Use the mustache templating below to indicate what fields from the incoming data should be sent to Rafflecopter. When you're done, provide <strong>{{ webhookUrl }}</strong> to the service you'd like to receive webhooks from.
+  Paste <strong>{{ webhookUrl }}</strong> into the service you'd like to begin receiving webhooks from, and they will be submitted to Rafflecopter as entries. Make sure you edited the "EDIT-ME.webhook-format.mustache" file in this repo. This tells us how to convert a webhook request body into a Rafflecopter entry. Here's what "EDIT-ME.webhook-format.mustache" contains currently: 
   </p>
-  <form action="" method="post">
-    <div class="form-group">
-      <label for="entrant-id">Entrant ID</label>
-      <input type="text" class="form-control" id="entrant-id" name="entrant-id" value="{{ entrant-id }}">
-      <p class="help-block">A Facebook ID would look like 147733601955627.</p>
-    </div>
-    <div class="form-group">
-      <label for="entrant-name">Entrant name</label>
-      <input type="text" class="form-control" id="entrant-name" name="entrant-name" value="{{ entrant-name }}">
-    </div>
-    <div class="form-group">
-      <label for="entrant-display">Entrant display</label>
-      <input type="text" class="form-control" id="entrant-display" name="entrant-display" value="{{ entrant-display }}">
-      <p class="help-block">A displayable identity for Twitter would be @rafflecopter.</p>
-    </div>
-    <div class="form-group">
-      <label for="entry">Entry body</label>
-      <input type="text" class="form-control" id="entry" name="entry" value="{{ entry }}">
-      <p class="help-block">A link to a Tweet to confirm that the entrant tweeted.</p>
-    </div>
-    <button type="submit" class="btn btn-default">Save</button>
-  </form>
-  {{#saved}}
-  <p class="bg-success">
-    Saved!
-  </p>
-  {{/saved}}
+  <pre>
+{{ webhookTemplate }}
+  </pre>
 </div>
 </body>
 </html>

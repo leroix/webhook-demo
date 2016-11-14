@@ -20,10 +20,5 @@
       "size": "free"
     }
   },
-  "image": "heroku/nodejs",
-  "addons": [
-    {
-      "plan": "heroku-redis:hobby-dev"
-    }
-  ]
+  "image": "heroku/nodejs"
 }
