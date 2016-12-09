@@ -18,6 +18,8 @@ var HTML_TEMPLATE = fs.readFileSync('./index.mustache').toString()
     : process.env.HEROKU_APP_NAME
       ? 'https://' + process.env.HEROKU_APP_NAME + '.herokuapp.com'
       : 'http://localhost:' + PORT
+  , RAFFLE_ID = process.env.RAFFLE_ID // REQUIRED
+  , ACTION_ID = process.env.ACTION_ID // REQUIRED
 
 
 var app = express()
@@ -44,7 +46,7 @@ app.post('/webhook', bodyParser.json(), function (request, response) {
 
   send_request({
     method: 'POST'
-  , url: 'http://requestb.in/1ignopr1'
+  , url: 'https://enter.rafflecopter.com/' + RAFFLE_ID + '/' + ACTION_ID
   , json: submission
   }, function (_err, resp, body) {
     response.status(resp.statusCode).json(body)

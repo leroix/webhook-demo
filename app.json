@@ -12,6 +12,12 @@
   "env": {
     "HEROKU_APP_NAME": {
       "required": true
+    },
+    "RAFFLE_ID": {
+      "required": true
+    },
+    "ACTION_ID": {
+      "required": true
     }
   },
   "formation": {
